@@ -509,7 +509,7 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 </style>
 <style>
 
-/* === 2x2 grid & flip video cover === */
+/* === 2x2 grid & flip behavior === */
 .section.section-muted .container > .grid3{
   display:grid;
   grid-template-columns: repeat(2, 1fr);
@@ -519,9 +519,16 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
   .section.section-muted .container > .grid3{ grid-template-columns: 1fr; }
 }
 .card.flippable{position:relative}
-.card.flippable .flip-back{position:absolute; inset:0; display:flex}
-.card.flippable .flip-front{position:relative}
-.card.flippable .flip-back video{width:100%; height:100%; object-fit:cover}
+.card.flippable .flip-inner{position:relative;transform-style:preserve-3d;transition:transform .6s}
+.card.flippable .flip-front,
+.card.flippable .flip-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:inherit;overflow:hidden}
+.card.flippable .flip-back{transform:rotateY(180deg)}
+.card.flippable.is-flipped .flip-inner{transform:rotateY(180deg)}
+.card.flippable .flip-back video{width:100%;height:100%;object-fit:cover}
+/* Disable hover flip on touch devices; use tap-to-toggle instead */
+@media (hover: none) {
+  .flippable:hover .flip-inner { transform: none !important; }
+}
 
 </style>
 </head>
@@ -1137,18 +1144,58 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  let openCard = null;
+
+  const getVideo = (card) => card ? card.querySelector('video') : null;
+  const playVideo = (v) => { if (v) { v.muted = true; v.play().catch(()=>{}); } };
+  const pauseVideo = (v) => { if (v) { v.pause(); } };
+
   document.querySelectorAll('.card.flippable').forEach(card => {
-    const video = card.querySelector('video');
-    if (!video) return;
-    video.muted = true;
-    card.addEventListener('mouseenter', () => { video.play().catch(()=>{}); });
-    card.addEventListener('mouseleave', () => { if (!card.classList.contains('is-flipped')) video.pause(); });
+    const video = getVideo(card);
+
+    // Desktop hover assists
+    card.addEventListener('mouseenter', () => {
+      if (!card.classList.contains('is-flipped')) playVideo(video);
+    });
+    card.addEventListener('mouseleave', () => {
+      if (!card.classList.contains('is-flipped')) pauseVideo(video);
+    });
+
+    // Tap/Click logic
     card.addEventListener('click', (e) => {
       if (e.target.closest('a,button')) return;
-      card.classList.toggle('is-flipped');
-      if (card.classList.contains('is-flipped')) video.play().catch(()=>{});
-      else video.pause();
-    }, {passive:true});
+
+      const isOpen = card.classList.contains('is-flipped');
+
+      // Close previously open card if different
+      if (openCard && openCard !== card) {
+        openCard.classList.remove('is-flipped');
+        pauseVideo(getVideo(openCard));
+        openCard = null;
+      }
+
+      if (isOpen) {
+        // second tap: close
+        card.classList.remove('is-flipped');
+        pauseVideo(video);
+        openCard = null;
+      } else {
+        // first tap: open
+        card.classList.add('is-flipped');
+        playVideo(video);
+        openCard = card;
+      }
+    }, { passive: true });
+  });
+
+  // Close on outside tap
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.card.flippable')) return;
+    if (openCard) {
+      openCard.classList.remove('is-flipped');
+      pauseVideo(openCard.querySelector('video'));
+      openCard = null;
+    }
   });
 });
 </script>
