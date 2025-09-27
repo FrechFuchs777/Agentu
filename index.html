@@ -509,19 +509,15 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 </style>
 <style>
 
-/* === Override: 2x2 grid for Warum-section (desktop) === */
+/* === 2x2 grid & flip video cover === */
 .section.section-muted .container > .grid3{
   display:grid;
   grid-template-columns: repeat(2, 1fr);
   gap:20px;
 }
 @media (max-width: 720px){
-  .section.section-muted .container > .grid3{
-    grid-template-columns: 1fr;
-  }
+  .section.section-muted .container > .grid3{ grid-template-columns: 1fr; }
 }
-
-/* Ensure front defines height; back overlays; video covers fully */
 .card.flippable{position:relative}
 .card.flippable .flip-back{position:absolute; inset:0; display:flex}
 .card.flippable .flip-front{position:relative}
@@ -597,7 +593,11 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
     </div>
     <div class="flip-face flip-back">
       <div class="video-holder">
-        <video src="/videos/geschwindigkeit.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Kachel-Video"></video>
+        <video autoplay muted loop playsinline preload="metadata" aria-label="Kachel-Video">
+          <source src="/videos/geschwindigkeit.mp4" type="video/mp4">
+          <source src="/videos/geschwindigkeit.webm" type="video/webm">
+          Dein Browser kann dieses Video nicht abspielen.
+        </video>
       </div>
     </div>
   </div>
@@ -612,7 +612,11 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
     </div>
     <div class="flip-face flip-back">
       <div class="video-holder">
-        <video src="/videos/geschwindigkeit.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Kachel-Video"></video>
+        <video autoplay muted loop playsinline preload="metadata" aria-label="Kachel-Video">
+          <source src="/videos/geschwindigkeit.mp4" type="video/mp4">
+          <source src="/videos/geschwindigkeit.webm" type="video/webm">
+          Dein Browser kann dieses Video nicht abspielen.
+        </video>
       </div>
     </div>
   </div>
@@ -627,7 +631,11 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
     </div>
     <div class="flip-face flip-back">
       <div class="video-holder">
-        <video src="/videos/geschwindigkeit.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Kachel-Video"></video>
+        <video autoplay muted loop playsinline preload="metadata" aria-label="Kachel-Video">
+          <source src="/videos/geschwindigkeit.mp4" type="video/mp4">
+          <source src="/videos/geschwindigkeit.webm" type="video/webm">
+          Dein Browser kann dieses Video nicht abspielen.
+        </video>
       </div>
     </div>
   </div>
@@ -642,7 +650,11 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
     </div>
     <div class="flip-face flip-back">
       <div class="video-holder">
-        <video src="/videos/geschwindigkeit.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Kachel-Video"></video>
+        <video autoplay muted loop playsinline preload="metadata" aria-label="Kachel-Video">
+          <source src="/videos/geschwindigkeit.mp4" type="video/mp4">
+          <source src="/videos/geschwindigkeit.webm" type="video/webm">
+          Dein Browser kann dieses Video nicht abspielen.
+        </video>
       </div>
     </div>
   </div>
@@ -1123,33 +1135,20 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
   }
 })();
 </script>
-
-
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.card.flippable').forEach(card => {
     const video = card.querySelector('video');
     if (!video) return;
-    // Safety for autoplay policies
     video.muted = true;
-    // Desktop hover: play on enter, pause on leave
-    card.addEventListener('mouseenter', () => {
-      if (video.paused) { video.play().catch(() => {}); }
-    });
-    card.addEventListener('mouseleave', () => {
-      if (!card.classList.contains('is-flipped')) { video.pause(); }
-    });
-    // Mobile/Click flip: toggle and manage playback
+    card.addEventListener('mouseenter', () => { video.play().catch(()=>{}); });
+    card.addEventListener('mouseleave', () => { if (!card.classList.contains('is-flipped')) video.pause(); });
     card.addEventListener('click', (e) => {
       if (e.target.closest('a,button')) return;
       card.classList.toggle('is-flipped');
-      if (card.classList.contains('is-flipped')) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    }, { passive: true });
+      if (card.classList.contains('is-flipped')) video.play().catch(()=>{});
+      else video.pause();
+    }, {passive:true});
   });
 });
 </script>
