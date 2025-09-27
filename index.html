@@ -1135,23 +1135,85 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
   }
 })();
 </script>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.card.flippable').forEach(card => {
+  const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+  let activeCard = null;
+
+  const cards = Array.from(document.querySelectorAll('.card.flippable'));
+  cards.forEach(card => {
     const video = card.querySelector('video');
-    if (!video) return;
-    video.muted = true;
-    card.addEventListener('mouseenter', () => { video.play().catch(()=>{}); });
-    card.addEventListener('mouseleave', () => { if (!card.classList.contains('is-flipped')) video.pause(); });
+    if (video) {
+      video.muted = true;
+      // Desktop/hover devices: use hover to control video
+      if (!isTouch) {
+        card.addEventListener('mouseenter', () => { video.play().catch(()=>{}); });
+        card.addEventListener('mouseleave', () => {
+          if (!card.classList.contains('is-flipped')) {
+            video.pause();
+            try { video.currentTime = 0; } catch(e) {}
+          }
+        });
+      }
+    }
+
     card.addEventListener('click', (e) => {
       if (e.target.closest('a,button')) return;
-      card.classList.toggle('is-flipped');
-      if (card.classList.contains('is-flipped')) video.play().catch(()=>{});
-      else video.pause();
-    }, {passive:true});
+
+      if (isTouch) {
+        const currentlyFlipped = card.classList.contains('is-flipped');
+
+        // Close previously active card if it's not this one
+        if (activeCard && activeCard !== card) {
+          activeCard.classList.remove('is-flipped');
+          const v = activeCard.querySelector('video');
+          if (v) {
+            v.pause();
+            try { v.currentTime = 0; } catch(e) {}
+          }
+          activeCard = null;
+        }
+
+        if (currentlyFlipped) {
+          // Second tap on same card -> flip back
+          card.classList.remove('is-flipped');
+          if (video) {
+            video.pause();
+            try { video.currentTime = 0; } catch(e) {}
+          }
+          activeCard = null;
+        } else {
+          // First tap -> flip to video
+          card.classList.add('is-flipped');
+          if (video) {
+            try { video.currentTime = 0; } catch(e) {}
+            video.play().catch(()=>{});
+          }
+          activeCard = card;
+        }
+      } else {
+        // Desktop: no click toggling; hover handles UX.
+      }
+    }, { passive: true });
   });
+
+  // Safety: if user scrolls far or resizes, close any active mobile card to avoid stuck states
+  const closeActive = () => {
+    if (!activeCard) return;
+    activeCard.classList.remove('is-flipped');
+    const v = activeCard.querySelector('video');
+    if (v) {
+      v.pause();
+      try { v.currentTime = 0; } catch(e) {}
+    }
+    activeCard = null;
+  };
+
+  window.addEventListener('resize', closeActive);
 });
 </script>
+
 
 </body>
 </html>
