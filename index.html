@@ -212,12 +212,11 @@
 .team-meta .m span{font-size:12px;color:#334155}
 
 
-/* --- Mobile: ensure taps flip card instead of pausing video --- */
+/* --- Touch-only tweaks for flippable cards --- */
 @media (pointer: coarse) {
-  .card.flippable .card-back video,
-  .flippable.card .card-back video {
-    pointer-events: none; /* pass taps to card wrapper */
-  }
+  .card.flippable .flip-back video { pointer-events: none; }
+  .card.flippable .flip-back { position: relative; }
+  .card.flippable .flip-back .tap-catcher { position:absolute; inset:0; z-index:2; background:transparent; }
 }
 </style>
 <link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><style>
@@ -1148,18 +1147,39 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 document.addEventListener('DOMContentLoaded', () => {
   const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
   let activeCard = null;
+  // Always-on video playback (muted, inline, loop) across devices
+  const allVideos = Array.from(document.querySelectorAll('.card.flippable video'));
+  allVideos.forEach(v => {
+    try {
+      v.setAttribute('muted',''); v.muted = true;
+      v.setAttribute('playsinline',''); v.playsInline = true;
+      v.setAttribute('loop',''); v.loop = true;
+      const ensurePlay = () => { v.play().catch(()=>{}); };
+      ensurePlay();
+      v.addEventListener('loadeddata', ensurePlay, { passive: true });
+      v.addEventListener('canplay', ensurePlay, { passive: true });
+      v.addEventListener('pause', ensurePlay);
+    } catch(e){}
+  });
+
 
   const cards = Array.from(document.querySelectorAll('.card.flippable'));
   cards.forEach(card => {
+    if (isTouch) {
+      const back = card.querySelector('.flip-back');
+      if (back && !back.querySelector('.tap-catcher')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'tap-catcher';
+        back.appendChild(overlay);
+      }
+    }
     const video = card.querySelector('video');
     if (video) {
-      if (isTouch) { try { video.controls = false; } catch(e) {};
-        video.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); });
-      }
+      if (isTouch) { video.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); }, { passive:true }); }
       video.muted = true;
       // Desktop/hover devices: use hover to control video
-      if (!isTouch) {
-        card.addEventListener('mouseenter', () => { video.play().catch(()=>{}); });
+      if (!isTouch) { try { video.play().catch(()=>{}); } catch(e) {} }
+); });
         card.addEventListener('mouseleave', () => {
           if (!card.classList.contains('is-flipped')) {
             video.pause();
@@ -1178,33 +1198,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Close previously active card if it's not this one
         if (activeCard && activeCard !== card) {
           activeCard.classList.remove('is-flipped');
-          const v = activeCard.querySelector('video');
-          if (v) {
-            v.pause();
-            try { v.currentTime = 0; } catch(e) {}
-          }
           activeCard = null;
         }
 
         if (currentlyFlipped) {
-          // Second tap on same card -> flip back
+          // Second tap on same card -> flip back (video keeps looping)
           card.classList.remove('is-flipped');
-          if (video) {
-      if (isTouch) { try { video.controls = false; } catch(e) {};
-        video.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); });
-      }
-            video.pause();
-            try { video.currentTime = 0; } catch(e) {}
-          }
           activeCard = null;
         } else {
           // First tap -> flip to video
           card.classList.add('is-flipped');
           if (video) {
-      if (isTouch) { try { video.controls = false; } catch(e) {};
-        video.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); });
-      }
-            try { video.currentTime = 0; } catch(e) {}
+      if (isTouch) { video.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); }, { passive:true }); }
             video.play().catch(()=>{});
           }
           activeCard = card;
@@ -1219,11 +1224,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeActive = () => {
     if (!activeCard) return;
     activeCard.classList.remove('is-flipped');
-    const v = activeCard.querySelector('video');
-    if (v) {
-      v.pause();
-      try { v.currentTime = 0; } catch(e) {}
-    }
     activeCard = null;
   };
 
