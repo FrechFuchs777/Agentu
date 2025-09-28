@@ -215,16 +215,20 @@
 /* --- Touch-only tweaks for flippable cards --- */
 @media (pointer: coarse) {
   .card.flippable .flip-back video { pointer-events: none; }
-  .card.flippable .flip-back { position: relative; }
+  .card.flippable .flip-back{position:absolute; inset:0; -webkit-transform:rotateY(180deg); transform:rotateY(180deg); display:flex}
   .card.flippable .flip-back .tap-catcher { position:absolute; inset:0; z-index:2; background:transparent; }
 }
 
 /* iOS/touch: route taps to the card, not the video */
 @media (pointer: coarse) {
-  .card.flippable .flip-back { position: relative; }
+  .card.flippable .flip-back{position:absolute; inset:0; -webkit-transform:rotateY(180deg); transform:rotateY(180deg); display:flex}
   .card.flippable .flip-back video { pointer-events: none !important; }
-  .card.flippable .flip-front, .card.flippable .flip-back { -webkit-transform: translateZ(0); transform: translateZ(0); }
+  .card.flippable .flip-front, .card.flippable .flip-back{position:absolute; inset:0; -webkit-transform:rotateY(180deg); transform:rotateY(180deg); display:flex}
 }
+
+/* Guard: back side only interactive when flipped */
+.card.flippable:not(.is-flipped) .flip-back{pointer-events:none}
+.card.flippable.is-flipped .flip-back{pointer-events:auto}
 </style>
 <link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><style>
 /* ===== Agentu Dark Purple Theme Overrides (2025-09-25) ===== */
@@ -292,13 +296,13 @@ a, .nav-links a{color:var(--olive-200)}
 .modal-placeholder{min-height:180px; border:1px dashed rgba(255,255,255,.18); border-radius:16px; display:flex; align-items:center; justify-content:center; color:var(--text-2)}
 
 /* ===== Warum-Agentu: flip cards with video back ===== */
-.flippable{perspective:1200px}
-.flip-inner{position:relative; transform-style:preserve-3d; transition:transform .6s}
-.flippable:hover .flip-inner{transform:rotateY(180deg)}
-.flippable.is-flipped .flip-inner{transform:rotateY(180deg)}
-.flip-face{backface-visibility:hidden}
-.flip-back{position:absolute; inset:0; transform:rotateY(180deg); display:flex}
-.flip-front, .flip-back{border-radius:inherit; overflow:hidden}
+.flippable{-webkit-perspective:1200px; perspective:1200px}
+.flip-inner{position:relative; -webkit-transform-style:preserve-3d; transform-style:preserve-3d; -webkit-transition:-webkit-transform .6s; transition:transform .6s}
+.flippable:hover .flip-inner{-webkit-transform:rotateY(180deg); transform:rotateY(180deg)}
+.flippable.is-flipped .flip-inner{-webkit-transform:rotateY(180deg); transform:rotateY(180deg)}
+.flip-face{-webkit-backface-visibility:hidden; backface-visibility:hidden}
+.flip-back{position:absolute; inset:0; -webkit-transform:rotateY(180deg); transform:rotateY(180deg); display:flex}
+.flip-front, .flip-back{position:absolute; inset:0; -webkit-transform:rotateY(180deg); transform:rotateY(180deg); display:flex}
 .flip-back .video-holder{display:flex; align-items:center; justify-content:center; width:100%; background:radial-gradient(400px 300px at 50% 50%, rgba(122,60,255,.15), rgba(255,255,255,.04))}
 .flip-back .video-holder .placeholder{opacity:.75; font-size:14px; color:var(--text-2)}
 .flip-back video{width:100%; height:100%; object-fit:cover}
@@ -311,7 +315,7 @@ a, .nav-links a{color:var(--olive-200)}
   .card{padding:2px}
 }
 @media (prefers-reduced-motion: reduce){
-  .flip-inner{transition:none}
+  .flip-inner{position:relative; -webkit-transform-style:preserve-3d; transform-style:preserve-3d; -webkit-transition:-webkit-transform .6s; transition:transform .6s}
 }
 
 /* Improve focus states */
@@ -532,8 +536,8 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 @media (max-width: 720px){
   .section.section-muted .container > .grid3{ grid-template-columns: 1fr; }
 }
-.card.flippable{position:relative}
-.card.flippable .flip-back{position:absolute; inset:0; display:flex}
+.card.flippable{-webkit-perspective:1200px; perspective:1200px}
+.card.flippable .flip-back{position:absolute; inset:0; -webkit-transform:rotateY(180deg); transform:rotateY(180deg); display:flex}
 .card.flippable .flip-front{position:relative}
 .card.flippable .flip-back video{width:100%; height:100%; object-fit:cover}
 
@@ -1148,7 +1152,10 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
       v.setAttribute('autoplay',''); v.autoplay = true;
       v.setAttribute('loop',''); v.loop = true;
       const forcePlay = () => v.play().catch(()=>{});
+      ['loadeddata','canplay'].forEach(evt => v.addEventListener(evt, forcePlay, { passive:true }));
       forcePlay();
+    } catch(e){}
+  });forcePlay();
       ['loadeddata','canplay','play','pause','suspend','stalled','waiting'].forEach(evt => {
         v.addEventListener(evt, forcePlay, { passive: true });
       });
@@ -1172,6 +1179,21 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 
 
   const cards = Array.from(document.querySelectorAll('.card.flippable'));
+  function toggleCardMobile(card){
+    const turned = card.classList.contains('is-flipped');
+    if (activeCard && activeCard !== card) {
+      activeCard.classList.remove('is-flipped');
+      activeCard = null;
+    }
+    if (turned) {
+      card.classList.remove('is-flipped');
+      activeCard = null;
+    } else {
+      card.classList.add('is-flipped');
+      activeCard = card;
+    }
+  }
+
   // Robust mobile toggling (works across iOS versions)
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   let lastTapTime = 0;
@@ -1228,7 +1250,7 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 
   // Use multiple event types for coverage; capture to beat inner handlers
   ['touchend','pointerup','click'].forEach(evt => {
-    document.addEventListener(evt, maybeToggleFromEvent, true);
+    /* removed global delegation */
   });
 
   cards.forEach(card => {
@@ -1276,7 +1298,28 @@ ling; hover handles UX.
     });
   });
 
-  // Safety: if user scrolls far or resizes, close any active mobile card to avoid stuck states
+  
+  let lastTap = 0;
+  cards.forEach(card => {
+    const handler = (e) => {
+      // ignore UI elements
+      if (e.target.closest && e.target.closest('a,button,[role="button"],input,textarea,select')) return;
+      const now = Date.now();
+      if (e.type === 'click' && (now - lastTap) < 220) { return; } // prevent double after touchend
+      if (isTouch && e.type === 'touchend') { lastTap = now; }
+      e.preventDefault && e.preventDefault();
+      e.stopPropagation && e.stopPropagation();
+      toggleCardMobile(card);
+    };
+    if (isTouch) {
+      card.addEventListener('touchend', handler, { passive:false });
+      // Also pointerup fallback
+      card.addEventListener('pointerup', handler);
+    }
+    // Support desktop click for accessibility (won't interfere with hover)
+    card.addEventListener('click', handler);
+  });
+// Safety: if user scrolls far or resizes, close any active mobile card to avoid stuck states
   const closeActive = () => {
     if (!activeCard) return;
     activeCard.classList.remove('is-flipped');
