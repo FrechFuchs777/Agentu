@@ -211,6 +211,14 @@
 .team-meta .m strong{display:block;font-size:12px;color:var(--olive-800);margin-bottom:2px}
 .team-meta .m span{font-size:12px;color:#334155}
 
+
+/* --- Mobile: ensure taps flip card instead of pausing video --- */
+@media (pointer: coarse) {
+  .card.flippable .card-back video,
+  .flippable.card .card-back video {
+    pointer-events: none; /* pass taps to card wrapper */
+  }
+}
 </style>
 <link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><style>
 /* ===== Agentu Dark Purple Theme Overrides (2025-09-25) ===== */
@@ -1145,6 +1153,9 @@ document.addEventListener('DOMContentLoaded', () => {
   cards.forEach(card => {
     const video = card.querySelector('video');
     if (video) {
+      if (isTouch) { try { video.controls = false; } catch(e) {};
+        video.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); });
+      }
       video.muted = true;
       // Desktop/hover devices: use hover to control video
       if (!isTouch) {
@@ -1179,6 +1190,9 @@ document.addEventListener('DOMContentLoaded', () => {
           // Second tap on same card -> flip back
           card.classList.remove('is-flipped');
           if (video) {
+      if (isTouch) { try { video.controls = false; } catch(e) {};
+        video.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); });
+      }
             video.pause();
             try { video.currentTime = 0; } catch(e) {}
           }
@@ -1187,6 +1201,9 @@ document.addEventListener('DOMContentLoaded', () => {
           // First tap -> flip to video
           card.classList.add('is-flipped');
           if (video) {
+      if (isTouch) { try { video.controls = false; } catch(e) {};
+        video.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); });
+      }
             try { video.currentTime = 0; } catch(e) {}
             video.play().catch(()=>{});
           }
