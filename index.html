@@ -218,6 +218,13 @@
   .card.flippable .flip-back { position: relative; }
   .card.flippable .flip-back .tap-catcher { position:absolute; inset:0; z-index:2; background:transparent; }
 }
+
+/* iOS/touch: route taps to the card, not the video */
+@media (pointer: coarse) {
+  .card.flippable .flip-back { position: relative; }
+  .card.flippable .flip-back video { pointer-events: none !important; }
+  .card.flippable .flip-front, .card.flippable .flip-back { -webkit-transform: translateZ(0); transform: translateZ(0); }
+}
 </style>
 <link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><style>
 /* ===== Agentu Dark Purple Theme Overrides (2025-09-25) ===== */
@@ -1129,24 +1136,25 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
         // move existing content into front
         front.appendChild(body);
         // create back content
-        back.innerHTML = '<div class="video-holder"><div class="placeholder">Kurzvideo hier einfügen (720×1280 mp4/webm).<br>Auf dem Handy per Tipp umdrehen.</div></div>';
-        // build
-        inner.appendChild(front); inner.appendChild(back);
-        card.appendChild(inner);
-        // touch toggle for mobile
-        card.addEventListener('click', ()=>{
-          card.classList.toggle('is-flipped');
-        });
-      });
-    }
-  }
-})();
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+        back.innerHTML = '<div class="video-holder"><div class="placeholder">Kurzvideo hier einfügen (720×1280 mp4/webm).<br>Auf dem Hdocument.addEventListener('DOMContentLoaded', () => {
   const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
   let activeCard = null;
+  // Ensure all flippable videos are always looping/playing
+  const allVideos = Array.from(document.querySelectorAll('.card.flippable video'));
+  allVideos.forEach(v => {
+    try {
+      v.setAttribute('muted',''); v.muted = true;
+      v.setAttribute('playsinline',''); v.playsInline = true;
+      v.setAttribute('autoplay',''); v.autoplay = true;
+      v.setAttribute('loop',''); v.loop = true;
+      const forcePlay = () => v.play().catch(()=>{});
+      forcePlay();
+      ['loadeddata','canplay','play','pause','suspend','stalled','waiting'].forEach(evt => {
+        v.addEventListener(evt, forcePlay, { passive: true });
+      });
+    } catch(e){}
+  });
+
   // Always-on video playback (muted, inline, loop) across devices
   const allVideos = Array.from(document.querySelectorAll('.card.flippable video'));
   allVideos.forEach(v => {
@@ -1164,6 +1172,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const cards = Array.from(document.querySelectorAll('.card.flippable'));
+  // Robust mobile toggling (works across iOS versions)
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let lastTapTime = 0;
+
+  function toggleCardMobile(card) {
+    if (!card) return;
+    const turned = card.classList.contains('is-flipped');
+    // Close another active card first
+    if (activeCard && activeCard !== card) {
+      activeCard.classList.remove('is-flipped');
+      activeCard = null;
+    }
+    if (turned) {
+      card.classList.remove('is-flipped');
+      activeCard = null;
+    } else {
+      card.classList.add('is-flipped');
+      activeCard = card;
+    }
+  }
+
+  // Add an overlay to the back face to guarantee taps land on the card (over video)
+  if (isTouch) {
+    document.querySelectorAll('.card.flippable .flip-back').forEach(back => {
+      if (!back.querySelector('.tap-catcher')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'tap-catcher';
+        overlay.style.position = 'absolute';
+        overlay.style.inset = '0';
+        overlay.style.zIndex = '3';
+        overlay.style.background = 'transparent';
+        overlay.style.pointerEvents = 'auto';
+        back.appendChild(overlay);
+      }
+    });
+  }
+
+  // Global delegation for maximum reliability on iOS
+  function maybeToggleFromEvent(e){
+    if (!isTouch) return;
+    const now = Date.now();
+    if (now - lastTapTime < 220) { e.preventDefault(); return; } // debounce ghost/double taps
+    lastTapTime = now;
+    let el = e.target;
+    // Ignore obvious interactive elements
+    if (el.closest && el.closest('a,button,[role="button"],input,textarea,select')) return;
+    const card = el.closest ? el.closest('.card.flippable') : null;
+    if (card) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleCardMobile(card);
+    }
+  }
+
+  // Use multiple event types for coverage; capture to beat inner handlers
+  ['touchend','pointerup','click'].forEach(evt => {
+    document.addEventListener(evt, maybeToggleFromEvent, true);
+  });
+
   cards.forEach(card => {
     // Robust tap handling for iOS: add overlay and explicit listeners
     if (isTouch) {
@@ -1202,42 +1269,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Desktop/hover devices: use hover to control video
       if (!isTouch) { try { video.play().catch(()=>{}); } catch(e) {} }
 ); });
-        card.addEventListener('mouseleave', () => {
-          if (!card.classList.contains('is-flipped')) {
-            video.pause();
-            try { video.currentTime = 0; } catch(e) {}
-          }
-        });
-      }
-    }
-
-    card.addEventListener('click', (e) => {
-      if (e.target.closest('a,button')) return;
-
-      if (isTouch) {
-        const currentlyFlipped = card.classList.contains('is-flipped');
-
-        // Close previously active card if it's not this one
-        if (activeCard && activeCard !== card) {
-          activeCard.classList.remove('is-flipped');
-          activeCard = null;
-        }
-
-        if (currentlyFlipped) {
-          // Second tap on same card -> flip back (video keeps looping)
-          card.classList.remove('is-flipped');
-          activeCard = null;
-        } else {
-          // First tap -> flip to video
-          card.classList.add('is-flipped');
-          if (video) {
-      if (isTouch) { video.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); }, { passive:true }); }
-            video.play().catch(()=>{});
-          }
-          activeCard = card;
-        }
-      } else {
-        // Desktop: no click toggling; hover handles UX.
+        window.addEventListener('resize', closeActive);
+});
+ling; hover handles UX.
       }
     });
   });
