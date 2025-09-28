@@ -1165,6 +1165,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const cards = Array.from(document.querySelectorAll('.card.flippable'));
   cards.forEach(card => {
+    // Robust tap handling for iOS: add overlay and explicit listeners
+    if (isTouch) {
+      const front = card.querySelector('.flip-front');
+      const back  = card.querySelector('.flip-back');
+      if (back && !back.querySelector('.tap-catcher')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'tap-catcher';
+        back.appendChild(overlay);
+      }
+      const relay = (e)=>{ 
+        // Normalize to card click so we reuse the single logic path
+        e.stopPropagation(); 
+        card.dispatchEvent(new Event('click', {bubbles:true})); 
+      };
+      ['click','touchend'].forEach(evt => {
+        if (front) front.addEventListener(evt, relay);
+        if (back)  back.addEventListener(evt,  relay);
+        const catcher = back && back.querySelector('.tap-catcher');
+        if (catcher) catcher.addEventListener(evt, relay);
+      });
+    }
+
     if (isTouch) {
       const back = card.querySelector('.flip-back');
       if (back && !back.querySelector('.tap-catcher')) {
@@ -1217,7 +1239,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         // Desktop: no click toggling; hover handles UX.
       }
-    }, { passive: true });
+    });
   });
 
   // Safety: if user scrolls far or resizes, close any active mobile card to avoid stuck states
