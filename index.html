@@ -220,6 +220,157 @@
 }
 
 .service-copy[hidden]{display:none}
+
+/* ==== UPGRADE: Stylish service modal (2025-10-08) ==== */
+.modal-scrim{
+  display:none;
+  position:fixed; inset:0;
+  background: rgba(7,6,14,.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  align-items:center; justify-content:center;
+  padding: 18px;
+  z-index: 2000;
+}
+.modal-scrim.active{ display:flex; }
+
+.modal{
+  position:relative;
+  width:min(860px, 94vw);
+  max-height: 78vh;
+  overflow:hidden;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: 0 30px 90px rgba(0,0,0,.55), 0 14px 34px rgba(85,107,47,.22);
+  transform: translateY(10px) scale(.985);
+  opacity: 0;
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), opacity .28s ease;
+}
+.modal-scrim.active .modal{ transform:none; opacity:1; }
+
+/* Decorative gradient border */
+.modal::before{
+  content:"";
+  position:absolute; inset:0; border-radius:inherit; padding:1px;
+  background: linear-gradient(120deg, var(--olive-300), rgba(122,60,255,.55), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  pointer-events:none; opacity:.5;
+}
+
+/* Header + Title */
+.modal-header{
+  position: sticky; top:0; z-index:2;
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  padding: 18px 22px;
+  background: linear-gradient(180deg, rgba(10,10,16,.65), rgba(10,10,16,.35));
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(4px);
+}
+.modal-title{
+  display:flex; align-items:center; gap:12px;
+  font-family: "Space Grotesk", Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 700; font-size: 24px; letter-spacing: .2px; color: var(--olive-100);
+}
+.modal-title::before{
+  content:"";
+  width:12px; height:12px; border-radius:999px;
+  background: radial-gradient(120% 120% at 30% 30%, var(--olive-300), var(--olive-600));
+  box-shadow: 0 0 18px rgba(122,60,255,.45);
+}
+
+/* Close button */
+.modal-close{
+  border:1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  color: var(--olive-50);
+  border-radius: 12px; padding: 10px 12px;
+  cursor:pointer;
+  transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.modal-close:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(85,107,47,.25); border-color: var(--olive-300); }
+.modal-close:active{ transform: translateY(0); }
+
+/* Body typography + scroll */
+.modal-body{
+  position:relative;
+  padding: 20px 24px;
+  max-height: calc(78vh - 64px);
+  overflow: auto;
+  line-height: 1.65; color: #e9ecef;
+}
+.modal-body p{ margin: 0 0 14px; }
+.modal-body p:last-child{ margin-bottom: 0; }
+
+/* Subtle scrollbars */
+.modal-body::-webkit-scrollbar{ width: 10px; }
+.modal-body::-webkit-scrollbar-track{ background: rgba(255,255,255,.03); border-radius: 999px; }
+.modal-body::-webkit-scrollbar-thumb{ background: linear-gradient(180deg, var(--olive-600), var(--olive-400)); border-radius: 999px; }
+
+/* Mobile bottom sheet behavior */
+@media (max-width: 720px){
+  .modal-scrim{ align-items: flex-end; padding: 10px; }
+  .modal{
+    width: 100vw; max-height: 86vh; border-radius: 22px 22px 0 0;
+    transform: translateY(24px) scale(1);
+  }
+  .modal-scrim.active .modal{ transform: translateY(0) scale(1); }
+  .modal-header{ padding: 16px 18px; }
+  .modal-title{ font-size: 20px; }
+  .modal-body{ padding: 16px 18px; max-height: calc(86vh - 60px); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .modal{ transition:none; }
+  .modal-scrim{ backdrop-filter: none; }
+}
+
+
+/* ==== UPGRADE: Modal content typography & UI (2025-10-08) ==== */
+.prose{
+  max-width: 70ch;
+  margin: 0 auto;
+  color: #e9ecef;
+  line-height: 1.7;
+  font-size: 17px;
+}
+@media (min-width: 980px){ .prose{ font-size: 18px; } }
+.prose p{ margin: 0 0 14px; }
+.prose p:last-child{ margin-bottom: 0; }
+.prose p:first-child{
+  font-size: 1.06em;
+  color: #f3f4f6;
+  letter-spacing: .1px;
+}
+
+.chips{
+  display:flex; flex-wrap:wrap; gap:8px; margin: 10px 24px 0 24px;
+}
+.chip{
+  display:inline-flex; align-items:center; gap:8px;
+  padding: 6px 10px; border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.16);
+  font-size: 12px; color: #e7e7ea;
+}
+.chip svg{ opacity:.9 }
+
+.callout{
+  display:flex; gap:12px; align-items:flex-start;
+  margin: 12px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(113,136,78,.18), rgba(113,136,78,.10));
+  border:1px solid rgba(113,136,78,.35);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+}
+.callout .callout-title{
+  font-weight: 800; letter-spacing:.2px; margin-bottom: 6px; color:#f5f7f2;
+}
+.callout p{ margin: 0; }
+
 </style>
 <link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><style>
 /* ===== Agentu Dark Purple Theme Overrides (2025-09-25) ===== */
@@ -1305,6 +1456,119 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
   // Preserve originalOpen if needed in future
+})();
+</script>
+
+
+<script>
+// === Post-click modal body populator (scope-agnostic, 2025-10-08) ===
+(function(){
+  function populateFromCaptured(){
+    const scrim = document.getElementById('serviceModal');
+    if(!scrim) return;
+    const bodyEl = scrim.querySelector('.modal-body');
+    const titleEl = scrim.querySelector('.modal-title');
+    if(!bodyEl || !titleEl) return;
+    const captured = window.__agentuServiceCopy || {};
+    if (captured.html && captured.html.trim()) {
+      bodyEl.innerHTML = captured.html;
+    } else {
+      // last fallback: if there's a .service-copy in any card matching the title, use it
+      const sect = document.getElementById('leistungen');
+      const card = sect ? Array.from(sect.querySelectorAll('.card')).find(c=> (c.querySelector('.k-title')?.textContent||'').trim() === (titleEl.textContent||'').trim()) : null;
+      const copyEl = card ? card.querySelector('.service-copy') : null;
+      if (copyEl) bodyEl.innerHTML = copyEl.innerHTML;
+    }
+  }
+
+  // Attach on capture so we set the variable, then schedule population after other handlers run
+  document.addEventListener('click', (ev)=>{
+    const card = ev.target.closest && ev.target.closest('#leistungen .card');
+    if(!card) return;
+    const title = (card.querySelector('.k-title')?.textContent || '').trim();
+    const copyEl = card.querySelector('.service-copy');
+    window.__agentuServiceCopy = { title, html: copyEl ? copyEl.innerHTML : '' };
+    // Populate after the modal has been opened by the site's own handler
+    setTimeout(populateFromCaptured, 0);
+  }, true);
+})();
+</script>
+
+
+<script>
+// === Modal content formatter & chips (2025-10-08) ===
+(function(){
+  const ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l2.7 5.5 6 .9-4.3 4.2 1 5.9L12 16.8 6.6 19.5l1-5.9L3.3 9.4l6-.9L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+
+  const TAGS = {
+    "Konzeptplanung": ["Zielbild","Sprints","KPIs"],
+    "Contentplanung": ["Hooks","Cadence","Priorisierung"],
+    "Contenterstellung": ["Batching","Styleguide","Freigaben"],
+    "Community-Management": ["SLAs","UGC","Tonalität"],
+    "Paid Social": ["Hypothesen","Tracking","Creatives"],
+    "Monitoring": ["North Star","Leit-KPIs","Lernschleife"]
+  };
+
+  function formatBodyFor(title, rawHTML){
+    // Split on "Ergebnis:" to create a callout for the result
+    const rx = /(.*?)(Ergebnis:\s*)(.*)$/s;
+    const m = rawHTML.replace(/\s+/g,' ').trim().match(rx);
+    if(!m){
+      return `<div class="prose">${rawHTML}</div>`;
+    }
+    const main = m[1].trim();
+    const result = m[3].trim();
+    return [
+      `<div class="prose">`,
+        `<p>${main}</p>`,
+        `<div class="callout">`,
+          `<div style="margin-top:2px">${ICON}</div>`,
+          `<div><div class="callout-title">Ergebnis</div><p>${result}</p></div>`,
+        `</div>`,
+      `</div>`
+    ].join('');
+  }
+
+  function ensureChips(title){
+    const header = document.querySelector('#serviceModal .modal-header');
+    if(!header) return;
+    // Remove old chips if any
+    const old = header.parentElement.querySelector('.chips');
+    if(old) old.remove();
+    const list = TAGS[title] || [];
+    if(!list.length) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'chips';
+    wrap.setAttribute('role','list');
+    list.forEach((t)=>{
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.setAttribute('role','listitem');
+      chip.innerHTML = ICON + `<span>${t}</span>`;
+      wrap.appendChild(chip);
+    });
+    header.insertAdjacentElement('afterend', wrap);
+  }
+
+  // Enhance existing openModal / post-population pipeline
+  const prevOpen = window.openModal;
+  window.openModal = function(title){
+    // Call any existing openModal first (to open the UI)
+    if (typeof prevOpen === 'function') prevOpen(title);
+
+    // Then format content
+    const scrim = document.getElementById('serviceModal');
+    const titleEl = scrim ? scrim.querySelector('.modal-title') : null;
+    const bodyEl  = scrim ? scrim.querySelector('.modal-body')  : null;
+    if(!scrim || !bodyEl) return;
+
+    const captured = window.__agentuServiceCopy || {};
+    const effectiveTitle = title || captured.title || (titleEl ? titleEl.textContent.trim() : '');
+    const raw = (captured.html && captured.html.trim()) ? captured.html : bodyEl.innerHTML;
+
+    bodyEl.innerHTML = formatBodyFor(effectiveTitle, raw);
+    ensureChips(effectiveTitle);
+  };
 })();
 </script>
 
