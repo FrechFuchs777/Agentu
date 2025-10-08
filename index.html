@@ -30,6 +30,9 @@
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
+    /* Ensure anchor targets are not hidden behind sticky header */
+    [id]{scroll-margin-top:84px}
+    
     body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
     a{color:inherit;text-decoration:none}
 
@@ -837,8 +840,6 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 }
 
 </style>
-
-
 <style>
 
 /* === Wer ist Agentu: Readability & Layout Fixes === */
@@ -909,7 +910,7 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 <!-- ======= NAV ======= -->
 <header class="nav">
 <div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
-<div class="container nav-inner" id="pakete">
+<div class="container nav-inner" id="pakete-wrap">
 <div aria-label="Agentu Start" class="brand">
 <!-- Agentu Monogram Logo (Dark Purple) -->
 <svg aria-hidden="true" height="32" role="img" viewbox="0 0 64 64" width="32">
@@ -934,7 +935,7 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 </div>
 <nav class="nav-links">
 <a href="#leistungen">Leistungen</a><a href="#pakete">Pakete</a>
-<a href="#team">Team</a>
+<a href="#wer-ist-agentu">Team</a>
 </nav>
 <div class="contact-actions" style="display:flex;gap:8px">
 <a class="btn btn-primary js-wa">Per WhatsApp anfragen</a>
@@ -1119,32 +1120,32 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 <article class="card" data-reveal=""><div class="card-body">
 <div class="k-title">Konzeptplanung</div>
 <p class="k-desc">Klarer Fahrplan von Ziel bis KPI.</p>
-<div class="service-copy" hidden><p>Früher saßen wir in Präsentationen, die mit einem Helikopter starten, drei Frameworks überfliegen und nach 60 Minuten ohne Landebahn enden. Schön anzusehen, aber niemand wusste, was am Montag zu tun ist. Wir drehen das um: Erst Zielbild, dann Spielfeld. Wir schneiden die Strategie auf Ressourcen und Tempo zu, definieren Verantwortliche, KPIs und Entscheidungsregeln. Kein „Vision-Deck“, sondern ein Spielplan in Sprints: Woche 1 Hypothese, Woche 2 Test, Woche 3 Skalierung oder Pivot. Ergebnis: weniger Folien, mehr Wirkung – messbar und machbar.</p></div>
+<div class="service-copy" hidden=""><p>Früher saßen wir in Präsentationen, die mit einem Helikopter starten, drei Frameworks überfliegen und nach 60 Minuten ohne Landebahn enden. Schön anzusehen, aber niemand wusste, was am Montag zu tun ist. Wir drehen das um: Erst Zielbild, dann Spielfeld. Wir schneiden die Strategie auf Ressourcen und Tempo zu, definieren Verantwortliche, KPIs und Entscheidungsregeln. Kein „Vision-Deck“, sondern ein Spielplan in Sprints: Woche 1 Hypothese, Woche 2 Test, Woche 3 Skalierung oder Pivot. Ergebnis: weniger Folien, mehr Wirkung – messbar und machbar.</p></div>
 </div></article>
 <article class="card" data-reveal=""><div class="card-body">
 <div class="k-title">Contentplanung</div>
 <p class="k-desc">Redaktionspläne, die verkaufen statt füllen.</p>
-<div class="service-copy" hidden><p>In großen Agenturen wurden Redaktionspläne oft wie Adventkalender behandelt: nett, aber nach dem 6. Türchen weiß keiner mehr, was drin ist. Bei uns ist Planung ein System. Wir bauen Formatserien mit klaren Hooks („Warum-jetzt?“, „So-geht’s“, „Mut zur Meinung“), legen Cadence und Kanäle fest und koppeln jedes Stück an ein Ziel (Reichweite, Interaktion, Conversion). Ein Backlog hält Ideen warm, ein Priorisierungs-Grid entscheidet, was zuerst produziert wird. So wird aus Kalender-Romantik ein Motor, der regelmäßig Output liefert – und zwar den richtigen.</p></div>
+<div class="service-copy" hidden=""><p>In großen Agenturen wurden Redaktionspläne oft wie Adventkalender behandelt: nett, aber nach dem 6. Türchen weiß keiner mehr, was drin ist. Bei uns ist Planung ein System. Wir bauen Formatserien mit klaren Hooks („Warum-jetzt?“, „So-geht’s“, „Mut zur Meinung“), legen Cadence und Kanäle fest und koppeln jedes Stück an ein Ziel (Reichweite, Interaktion, Conversion). Ein Backlog hält Ideen warm, ein Priorisierungs-Grid entscheidet, was zuerst produziert wird. So wird aus Kalender-Romantik ein Motor, der regelmäßig Output liefert – und zwar den richtigen.</p></div>
 </div></article>
 <article class="card" data-reveal=""><div class="card-body">
 <div class="k-title">Contenterstellung</div>
 <p class="k-desc">Schlanke Produktion für Social-Tempo.</p>
-<div class="service-copy" hidden><p>Die klassische Reise: Briefing → Abstimmungsrunde → „können wir noch eine Version machen?“ → Final_final_v7. Währenddessen ist der Trend weg. Unser Weg: kurze Briefings mit Beispiel-Hooks, Styleguide als Guardrail, Batch-Produktion mit festen Freigabefenstern. Wir testen Varianten klein, bevor wir groß perfektionieren. Entscheidungswege sind kurz (Creator ↔ Entscheider), Feedback ist konkret (Message, Hook, CTA). Ergebnis: Content im Takt des Feeds, ohne Qualität zu opfern – und ohne, dass man ein Museum für Zwischenversionen eröffnen müsste.</p></div>
+<div class="service-copy" hidden=""><p>Die klassische Reise: Briefing → Abstimmungsrunde → „können wir noch eine Version machen?“ → Final_final_v7. Währenddessen ist der Trend weg. Unser Weg: kurze Briefings mit Beispiel-Hooks, Styleguide als Guardrail, Batch-Produktion mit festen Freigabefenstern. Wir testen Varianten klein, bevor wir groß perfektionieren. Entscheidungswege sind kurz (Creator ↔ Entscheider), Feedback ist konkret (Message, Hook, CTA). Ergebnis: Content im Takt des Feeds, ohne Qualität zu opfern – und ohne, dass man ein Museum für Zwischenversionen eröffnen müsste.</p></div>
 </div></article>
 <article class="card" data-reveal=""><div class="card-body">
 <div class="k-title">Community-Management</div>
 <p class="k-desc">Antworten, die Beziehungen bauen.</p>
-<div class="service-copy" hidden><p>Manchmal klang Community früher wie ein Ticket-System: Nummer ziehen, bitte Geduld. Dabei entstehen Beziehungen nicht im Wartezimmer. Wir arbeiten mit Tonalitätsleitplanken, Antwortbibliotheken für Wiederkehrendes und Eskalationswegen, die wirklich kurz sind. Monitoring in Echtzeit, klare SLAs je Kanal, und: Wir erkennen Chancen – aus einer Frage wird ein Post, aus einem Kommentar ein UGC-Format. Community ist für uns kein „nachgelagert“, sondern Teil des Contents. So entsteht Nähe, die nicht nach Callcenter klingt, sondern nach Marke mit Puls.</p></div>
+<div class="service-copy" hidden=""><p>Manchmal klang Community früher wie ein Ticket-System: Nummer ziehen, bitte Geduld. Dabei entstehen Beziehungen nicht im Wartezimmer. Wir arbeiten mit Tonalitätsleitplanken, Antwortbibliotheken für Wiederkehrendes und Eskalationswegen, die wirklich kurz sind. Monitoring in Echtzeit, klare SLAs je Kanal, und: Wir erkennen Chancen – aus einer Frage wird ein Post, aus einem Kommentar ein UGC-Format. Community ist für uns kein „nachgelagert“, sondern Teil des Contents. So entsteht Nähe, die nicht nach Callcenter klingt, sondern nach Marke mit Puls.</p></div>
 </div></article>
 <article class="card" data-reveal=""><div class="card-body">
 <div class="k-title">Paid Social</div>
 <p class="k-desc">Medienbudget effizienter in Wirkung verwandeln.</p>
-<div class="service-copy" hidden><p>Wir haben zu oft hübsche CPM-Kurven gesehen, die am Ende niemandem den Kassabon versüßt haben. Paid ist bei uns kein U-Boot, das wochenlang unsichtbar fährt. Wir arbeiten hypothesenbasiert: Creative x Zielgruppe x Offer – jede Woche eine klare Lernfrage. Tracking sitzt (UTMs, Events, saubere Pixel), Creatives testen wir strukturiert (Thumbstopper, Hook, Proof, CTA). Budget fließt dorthin, wo die Lernrate steigt; was nicht liefert, fliegt – ohne Drama. Ergebnis: weniger Eitelkeitszahlen, mehr Cost-per-Result, die man gern herzeigt.</p></div>
+<div class="service-copy" hidden=""><p>Wir haben zu oft hübsche CPM-Kurven gesehen, die am Ende niemandem den Kassabon versüßt haben. Paid ist bei uns kein U-Boot, das wochenlang unsichtbar fährt. Wir arbeiten hypothesenbasiert: Creative x Zielgruppe x Offer – jede Woche eine klare Lernfrage. Tracking sitzt (UTMs, Events, saubere Pixel), Creatives testen wir strukturiert (Thumbstopper, Hook, Proof, CTA). Budget fließt dorthin, wo die Lernrate steigt; was nicht liefert, fliegt – ohne Drama. Ergebnis: weniger Eitelkeitszahlen, mehr Cost-per-Result, die man gern herzeigt.</p></div>
 </div></article>
 <article class="card" data-reveal=""><div class="card-body">
 <div class="k-title">Monitoring</div>
 <p class="k-desc">Kennzahlen, Learnings, nächste beste Aktion.</p>
-<div class="service-copy" hidden><p>Die Monatsreports früher: 30 Seiten, fünf Farben, null nächste Schritte. Schöne Chronik, wenig Richtung. Unser Monitoring ist ein Cockpit: ein North-Star, wenige Leit-KPIs, dahinter die Hebel. Wöchentlich schließen wir die Lernschleife: Was hat gewirkt? Warum? Was testen wir als Nächstes? Jede Zahl bekommt eine Aktion, jeder Chart eine Entscheidung. So wird Reporting vom Wetterbericht zur Wettervorhersage – mit Regenschirm, nicht nur mit „es könnte regnen“.</p></div>
+<div class="service-copy" hidden=""><p>Die Monatsreports früher: 30 Seiten, fünf Farben, null nächste Schritte. Schöne Chronik, wenig Richtung. Unser Monitoring ist ein Cockpit: ein North-Star, wenige Leit-KPIs, dahinter die Hebel. Wöchentlich schließen wir die Lernschleife: Was hat gewirkt? Warum? Was testen wir als Nächstes? Jede Zahl bekommt eine Aktion, jeder Chart eine Entscheidung. So wird Reporting vom Wetterbericht zur Wettervorhersage – mit Regenschirm, nicht nur mit „es könnte regnen“.</p></div>
 </div></article>
 </div>
 </div>
@@ -1237,73 +1238,67 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 </div>
 </div>
 </section>
-
-
-<section id="wer-ist-agentu" class="section wer-ist-agentu" aria-labelledby="wer-ist-agentu-title">
-  <div class="container">
-    <h2 id="wer-ist-agentu-title" class="section-title">Wer ist <span class="brand-accent">Agentu</span>?</h2>
-    <p class="section-subtitle">Zwei Köpfe. Ein Anspruch: messbares Wachstum ohne Blabla.</p>
-
-    <div class="team-grid" role="list">
-      <!-- Card: Merve -->
-      <article class="team-card" role="listitem" aria-label="Merve – Master in Produktmarketing & Innovationsmanagement">
-        <div class="card-bg deco-1" aria-hidden="true"></div>
-        <header class="team-card__header">
-          <div class="avatar" aria-hidden="true">
-            <span>M</span>
-          </div>
-          <div class="identity">
-            <h3 class="name">Merve</h3>
-            <p class="title">MSc Produktmarketing & Innovationsmanagement</p>
-          </div>
-        </header>
-        <div class="team-card__body">
-          <p>
+<section aria-labelledby="wer-ist-agentu-title" class="section wer-ist-agentu" id="wer-ist-agentu">
+<div class="container">
+<h2 class="section-title" id="wer-ist-agentu-title">Wer ist <span class="brand-accent">Agentu</span>?</h2>
+<p class="section-subtitle">Zwei Köpfe. Ein Anspruch: messbares Wachstum ohne Blabla.</p>
+<div class="team-grid" role="list">
+<!-- Card: Merve -->
+<article aria-label="Merve – Master in Produktmarketing &amp; Innovationsmanagement" class="team-card" role="listitem">
+<div aria-hidden="true" class="card-bg deco-1"></div>
+<header class="team-card__header">
+<div aria-hidden="true" class="avatar">
+<span>M</span>
+</div>
+<div class="identity">
+<h3 class="name">Merve</h3>
+<p class="title">MSc Produktmarketing &amp; Innovationsmanagement</p>
+</div>
+</header>
+<div class="team-card__body">
+<p>
             Hebt Kanäle über die <strong>10k-Marke</strong>, erkennt Trends, bevor sie auf der
             <em>For-You-Page</em> landen – und übersetzt sie in <strong>klar messbares Wachstum</strong>.
           </p>
-        </div>
-        <footer class="team-card__footer">
-          <ul class="badges" aria-label="Schwerpunkte">
-            <li>Trend Scouting</li>
-            <li>Channel Growth</li>
-            <li>Creative Ops</li>
-          </ul>
-        </footer>
-      </article>
-
-      <!-- Card: Chris -->
-      <article class="team-card" role="listitem" aria-label="Chris – Master in Produktmarketing & Innovationsmanagement">
-        <div class="card-bg deco-2" aria-hidden="true"></div>
-        <header class="team-card__header">
-          <div class="avatar" aria-hidden="true">
-            <span>C</span>
-          </div>
-          <div class="identity">
-            <h3 class="name">Chris</h3>
-            <p class="title">MSc Produktmarketing & Innovationsmanagement</p>
-          </div>
-        </header>
-        <div class="team-card__body">
-          <p>
+</div>
+<footer class="team-card__footer">
+<ul aria-label="Schwerpunkte" class="badges">
+<li>Trend Scouting</li>
+<li>Channel Growth</li>
+<li>Creative Ops</li>
+</ul>
+</footer>
+</article>
+<!-- Card: Chris -->
+<article aria-label="Chris – Master in Produktmarketing &amp; Innovationsmanagement" class="team-card" role="listitem">
+<div aria-hidden="true" class="card-bg deco-2"></div>
+<header class="team-card__header">
+<div aria-hidden="true" class="avatar">
+<span>C</span>
+</div>
+<div class="identity">
+<h3 class="name">Chris</h3>
+<p class="title">MSc Produktmarketing &amp; Innovationsmanagement</p>
+</div>
+</header>
+<div class="team-card__body">
+<p>
             Enterprise-Erfahrung <strong>ohne Enterprise-Trägheit</strong>.
             Baut <strong>schlanke Content-Maschinen</strong> mit klaren KPIs und
             <strong>sauberem Reporting</strong>.
           </p>
-        </div>
-        <footer class="team-card__footer">
-          <ul class="badges" aria-label="Schwerpunkte">
-            <li>Workflow Design</li>
-            <li>KPI‑Frameworks</li>
-            <li>Reporting</li>
-          </ul>
-        </footer>
-      </article>
-    </div>
-  </div>
+</div>
+<footer class="team-card__footer">
+<ul aria-label="Schwerpunkte" class="badges">
+<li>Workflow Design</li>
+<li>KPI‑Frameworks</li>
+<li>Reporting</li>
+</ul>
+</footer>
+</article>
+</div>
+</div>
 </section>
-
-
 <!-- TEAM (neu gestaltet, Merve links / Chris rechts) -->
 <!-- CTA -->
 <section class="section" id="cta">
@@ -1625,7 +1620,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', closeActive);
 });
 </script>
-
 <script>
 // === Service copy mapping & modal content population (injected 2025-10-08) ===
 (function(){
@@ -1658,8 +1652,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 })();
 </script>
-
-
 <script>
 // === Service copy mapping & modal content population (append fix 2025-10-08) ===
 (function(){
@@ -1692,8 +1684,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 })();
 </script>
-
-
 <script>
 // === Leistungen: capture per-card copy and ensure modal body is filled (2025-10-08) ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -1735,8 +1725,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Preserve originalOpen if needed in future
 })();
 </script>
-
-
 <script>
 // === Post-click modal body populator (scope-agnostic, 2025-10-08) ===
 (function(){
@@ -1770,8 +1758,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }, true);
 })();
 </script>
-
-
 <script>
 // === Modal content formatter & chips (2025-10-08) ===
 (function(){
@@ -1848,6 +1834,5 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 })();
 </script>
-
 </body>
 </html>
