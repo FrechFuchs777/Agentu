@@ -694,6 +694,216 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 
 .service-copy[hidden]{display:none}
 </style>
+<style>
+
+/* === Wer ist Agentu (scoped) === */
+.section.wer-ist-agentu {
+  padding: clamp(2.5rem, 4vw, 4rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.section.wer-ist-agentu .section-title {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.15;
+  margin: 0 0 0.35rem 0;
+  letter-spacing: -0.01em;
+}
+
+.section.wer-ist-agentu .brand-accent {
+  background: linear-gradient(92deg, var(--accent, #7e5bef), var(--accent-2, #34d399));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.section.wer-ist-agentu .section-subtitle {
+  opacity: 0.8;
+  margin: 0 0 1.5rem 0;
+}
+
+.section.wer-ist-agentu .team-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+@media (min-width: 860px) {
+  .section.wer-ist-agentu .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.section.wer-ist-agentu .team-card {
+  position: relative;
+  border-radius: 18px;
+  padding: clamp(1rem, 2.2vw, 1.25rem);
+  background: color-mix(in srgb, var(--card, #0b0b0f) 88%, white 12%);
+  border: 1px solid color-mix(in srgb, var(--card, #1a1a22) 70%, white 30%);
+  box-shadow: 0 6px 24px rgba(0,0,0,.22);
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .section.wer-ist-agentu .team-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(0,0,0,.28);
+    border-color: color-mix(in srgb, var(--accent, #7e5bef) 40%, white 60%);
+  }
+}
+
+.section.wer-ist-agentu .team-card .card-bg {
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  filter: blur(40px);
+  opacity: .35;
+  transform: rotate(8deg) scale(1.1);
+}
+
+.section.wer-ist-agentu .team-card .card-bg.deco-1 {
+  background: radial-gradient(35% 35% at 30% 35%, var(--accent, #7e5bef), transparent 60%),
+              radial-gradient(25% 25% at 70% 70%, var(--accent-2, #34d399), transparent 60%);
+}
+
+.section.wer-ist-agentu .team-card .card-bg.deco-2 {
+  background: radial-gradient(35% 35% at 65% 30%, var(--accent-2, #34d399), transparent 60%),
+              radial-gradient(30% 30% at 35% 75%, #60a5fa, transparent 60%);
+}
+
+.section.wer-ist-agentu .team-card__header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: .85rem;
+  margin-bottom: .5rem;
+}
+
+.section.wer-ist-agentu .avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--accent, #7e5bef) 76%, #000 24%), #111);
+  color: white;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.08), 0 6px 18px rgba(0,0,0,.35);
+}
+
+.section.wer-ist-agentu .identity .name {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.section.wer-ist-agentu .identity .title {
+  margin: .1rem 0 0 0;
+  font-size: .92rem;
+  opacity: .85;
+}
+
+.section.wer-ist-agentu .team-card__body p {
+  margin: .6rem 0 0 0;
+  font-size: clamp(1rem, 1.2vw, 1.05rem);
+  line-height: 1.55;
+}
+
+.section.wer-ist-agentu .team-card__footer {
+  margin-top: .9rem;
+}
+
+.section.wer-ist-agentu .badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.section.wer-ist-agentu .badges li {
+  font-size: .82rem;
+  padding: .45rem .6rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+</style>
+
+
+<style>
+
+/* === Wer ist Agentu: Readability & Layout Fixes === */
+.section.wer-ist-agentu .team-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.section.wer-ist-agentu .team-card__header,
+.section.wer-ist-agentu .team-card__body,
+.section.wer-ist-agentu .team-card__footer {
+  width: 100%;
+}
+
+.section.wer-ist-agentu .team-card__body {
+  flex: 1 1 auto;
+  margin-top: .35rem;
+}
+
+.section.wer-ist-agentu .team-card p,
+.section.wer-ist-agentu .identity .title {
+  max-width: 65ch;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  text-wrap: pretty;
+}
+
+.section.wer-ist-agentu .identity .title {
+  line-height: 1.25;
+}
+
+.section.wer-ist-agentu .team-card__footer {
+  margin-top: .85rem;
+}
+
+@media (max-width: 420px) {
+  .section.wer-ist-agentu .team-card {
+    padding: 1rem;
+  }
+  .section.wer-ist-agentu .avatar {
+    width: 50px;
+    height: 50px;
+    font-size: .95rem;
+  }
+  .section.wer-ist-agentu .identity .name {
+    font-size: 1.05rem;
+  }
+  .section.wer-ist-agentu .identity .title {
+    font-size: .9rem;
+  }
+  .section.wer-ist-agentu .team-card__body p {
+    font-size: .98rem;
+    line-height: 1.55;
+  }
+}
+
+/* Prefer balanced headings where supported */
+@supports (text-wrap: balance) {
+  .section.wer-ist-agentu .section-title { text-wrap: balance; }
+}
+
+</style>
 </head>
 <body>
 <!-- ======= NAV ======= -->
@@ -1027,6 +1237,73 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
 </div>
 </div>
 </section>
+
+
+<section id="wer-ist-agentu" class="section wer-ist-agentu" aria-labelledby="wer-ist-agentu-title">
+  <div class="container">
+    <h2 id="wer-ist-agentu-title" class="section-title">Wer ist <span class="brand-accent">Agentu</span>?</h2>
+    <p class="section-subtitle">Zwei Köpfe. Ein Anspruch: messbares Wachstum ohne Blabla.</p>
+
+    <div class="team-grid" role="list">
+      <!-- Card: Merve -->
+      <article class="team-card" role="listitem" aria-label="Merve – Master in Produktmarketing & Innovationsmanagement">
+        <div class="card-bg deco-1" aria-hidden="true"></div>
+        <header class="team-card__header">
+          <div class="avatar" aria-hidden="true">
+            <span>M</span>
+          </div>
+          <div class="identity">
+            <h3 class="name">Merve</h3>
+            <p class="title">MSc Produktmarketing & Innovationsmanagement</p>
+          </div>
+        </header>
+        <div class="team-card__body">
+          <p>
+            Hebt Kanäle über die <strong>10k-Marke</strong>, erkennt Trends, bevor sie auf der
+            <em>For-You-Page</em> landen – und übersetzt sie in <strong>klar messbares Wachstum</strong>.
+          </p>
+        </div>
+        <footer class="team-card__footer">
+          <ul class="badges" aria-label="Schwerpunkte">
+            <li>Trend Scouting</li>
+            <li>Channel Growth</li>
+            <li>Creative Ops</li>
+          </ul>
+        </footer>
+      </article>
+
+      <!-- Card: Chris -->
+      <article class="team-card" role="listitem" aria-label="Chris – Master in Produktmarketing & Innovationsmanagement">
+        <div class="card-bg deco-2" aria-hidden="true"></div>
+        <header class="team-card__header">
+          <div class="avatar" aria-hidden="true">
+            <span>C</span>
+          </div>
+          <div class="identity">
+            <h3 class="name">Chris</h3>
+            <p class="title">MSc Produktmarketing & Innovationsmanagement</p>
+          </div>
+        </header>
+        <div class="team-card__body">
+          <p>
+            Enterprise-Erfahrung <strong>ohne Enterprise-Trägheit</strong>.
+            Baut <strong>schlanke Content-Maschinen</strong> mit klaren KPIs und
+            <strong>sauberem Reporting</strong>.
+          </p>
+        </div>
+        <footer class="team-card__footer">
+          <ul class="badges" aria-label="Schwerpunkte">
+            <li>Workflow Design</li>
+            <li>KPI‑Frameworks</li>
+            <li>Reporting</li>
+          </ul>
+        </footer>
+      </article>
+    </div>
+  </div>
+</section>
+
+
 <!-- TEAM (neu gestaltet, Merve links / Chris rechts) -->
 <!-- CTA -->
 <section class="section" id="cta">
