@@ -1000,7 +1000,7 @@ svg [fill="#7a3cff"]{fill:var(--olive-300)!important}
       });
     });
   </script>
-<div aria-hidden="true" class="modal-scrim" id="serviceModal" role="dialog"><div class="modal" role="document"><div class="modal-header"><div class="modal-title">Leistung</div><button aria-label="Schließen" class="modal-close" type="button">Schließen</button></div><div class="modal-body"><div class="modal-placeholder">Hier kannst du später deinen Text einfügen.</div></div></div></div><script>
+<div aria-hidden="true" class="modal-scrim" id="serviceModal" role="dialog"><div class="modal" role="document"><div class="modal-header"><div class="modal-title">Leistung</div><button aria-label="Schließen" class="modal-close" type="button">Schließen</button></div><div class="modal-body"><div class="modal-placeholder"></div></div></div></div><script>
 (function(){
   const $$ = (sel, root=document)=>Array.from(root.querySelectorAll(sel));
 
@@ -1179,5 +1179,73 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', closeActive);
 });
 </script>
+
+<script>
+// === Service copy mapping & modal content population (injected 2025-10-08) ===
+(function(){
+  // Modal elements
+  const scrim   = document.getElementById('serviceModal');
+  const titleEl = scrim ? scrim.querySelector('.modal-title') : null;
+  const bodyEl  = scrim ? scrim.querySelector('.modal-body')  : null;
+  const closeBtn= scrim ? scrim.querySelector('.modal-close') : null;
+
+  const SERVICES_COPY = {
+    "Konzeptplanung": `<p>Früher saßen wir in Präsentationen, die mit einem Helikopter starten, drei Frameworks überfliegen und nach 60 Minuten ohne Landebahn enden. Schön anzusehen, aber niemand wusste, was am Montag zu tun ist. Wir drehen das um: Erst Zielbild, dann Spielfeld. Wir schneiden die Strategie auf Ressourcen und Tempo zu, definieren Verantwortliche, KPIs und Entscheidungsregeln. Kein „Vision-Deck“, sondern ein Spielplan in Sprints: Woche 1 Hypothese, Woche 2 Test, Woche 3 Skalierung oder Pivot. Ergebnis: weniger Folien, mehr Wirkung – messbar und machbar.</p>`,
+    "Contentplanung": `<p>In großen Agenturen wurden Redaktionspläne oft wie Adventkalender behandelt: nett, aber nach dem 6. Türchen weiß keiner mehr, was drin ist. Bei uns ist Planung ein System. Wir bauen Formatserien mit klaren Hooks („Warum-jetzt?“, „So-geht’s“, „Mut zur Meinung“), legen Cadence und Kanäle fest und koppeln jedes Stück an ein Ziel (Reichweite, Interaktion, Conversion). Ein Backlog hält Ideen warm, ein Priorisierungs-Grid entscheidet, was zuerst produziert wird. So wird aus Kalender-Romantik ein Motor, der regelmäßig Output liefert – und zwar den richtigen.</p>`,
+    "Contenterstellung": `<p>Die klassische Reise: Briefing → Abstimmungsrunde → „können wir noch eine Version machen?“ → Final_final_v7. Währenddessen ist der Trend weg. Unser Weg: kurze Briefings mit Beispiel-Hooks, Styleguide als Guardrail, Batch-Produktion mit festen Freigabefenstern. Wir testen Varianten klein, bevor wir groß perfektionieren. Entscheidungswege sind kurz (Creator ↔ Entscheider), Feedback ist konkret (Message, Hook, CTA). Ergebnis: Content im Takt des Feeds, ohne Qualität zu opfern – und ohne, dass man ein Museum für Zwischenversionen eröffnen müsste.</p>`,
+    "Community-Management": `<p>Manchmal klang Community früher wie ein Ticket-System: Nummer ziehen, bitte Geduld. Dabei entstehen Beziehungen nicht im Wartezimmer. Wir arbeiten mit Tonalitätsleitplanken, Antwortbibliotheken für Wiederkehrendes und Eskalationswegen, die wirklich kurz sind. Monitoring in Echtzeit, klare SLAs je Kanal, und: Wir erkennen Chancen – aus einer Frage wird ein Post, aus einem Kommentar ein UGC-Format. Community ist für uns kein „nachgelagert“, sondern Teil des Contents. So entsteht Nähe, die nicht nach Callcenter klingt, sondern nach Marke mit Puls.</p>`,
+    "Paid Social": `<p>Wir haben zu oft hübsche CPM-Kurven gesehen, die am Ende niemandem den Kassabon versüßt haben. Paid ist bei uns kein U-Boot, das wochenlang unsichtbar fährt. Wir arbeiten hypothesenbasiert: Creative x Zielgruppe x Offer – jede Woche eine klare Lernfrage. Tracking sitzt (UTMs, Events, saubere Pixel), Creatives testen wir strukturiert (Thumbstopper, Hook, Proof, CTA). Budget fließt dorthin, wo die Lernrate steigt; was nicht liefert, fliegt – ohne Drama. Ergebnis: weniger Eitelkeitszahlen, mehr Cost-per-Result, die man gern herzeigt.</p>`,
+    "Monitoring": `<p>Die Monatsreports früher: 30 Seiten, fünf Farben, null nächste Schritte. Schöne Chronik, wenig Richtung. Unser Monitoring ist ein Cockpit: ein North-Star, wenige Leit-KPIs, dahinter die Hebel. Wöchentlich schließen wir die Lernschleife: Was hat gewirkt? Warum? Was testen wir als Nächstes? Jede Zahl bekommt eine Aktion, jeder Chart eine Entscheidung. So wird Reporting vom Wetterbericht zur Wettervorhersage – mit Regenschirm, nicht nur mit „es könnte regnen“.</p>`
+  };
+
+  // Override/define openModal to set title and body based on the clicked card title
+  window.openModal = function(title){
+    if(!scrim || !titleEl || !bodyEl) return;
+    const key = (title || '').trim();
+    titleEl.textContent = key || 'Leistung';
+    const copy = SERVICES_COPY[key] || `<p>Details folgen.</p>`;
+    bodyEl.innerHTML = copy;
+    scrim.classList.add('active');
+    scrim.setAttribute('aria-hidden','false');
+    // Focus for a11y
+    (closeBtn || scrim).focus?.();
+  };
+})();
+</script>
+
+
+<script>
+// === Service copy mapping & modal content population (append fix 2025-10-08) ===
+(function(){
+  const SERVICES_COPY = {
+    "Konzeptplanung": `<p>Früher saßen wir in Präsentationen, die mit einem Helikopter starten, drei Frameworks überfliegen und nach 60 Minuten ohne Landebahn enden. Schön anzusehen, aber niemand wusste, was am Montag zu tun ist. Wir drehen das um: Erst Zielbild, dann Spielfeld. Wir schneiden die Strategie auf Ressourcen und Tempo zu, definieren Verantwortliche, KPIs und Entscheidungsregeln. Kein „Vision-Deck“, sondern ein Spielplan in Sprints: Woche 1 Hypothese, Woche 2 Test, Woche 3 Skalierung oder Pivot. Ergebnis: weniger Folien, mehr Wirkung – messbar und machbar.</p>`,
+    "Contentplanung": `<p>In großen Agenturen wurden Redaktionspläne oft wie Adventkalender behandelt: nett, aber nach dem 6. Türchen weiß keiner mehr, was drin ist. Bei uns ist Planung ein System. Wir bauen Formatserien mit klaren Hooks („Warum-jetzt?“, „So-geht’s“, „Mut zur Meinung“), legen Cadence und Kanäle fest und koppeln jedes Stück an ein Ziel (Reichweite, Interaktion, Conversion). Ein Backlog hält Ideen warm, ein Priorisierungs-Grid entscheidet, was zuerst produziert wird. So wird aus Kalender-Romantik ein Motor, der regelmäßig Output liefert – und zwar den richtigen.</p>`,
+    "Contenterstellung": `<p>Die klassische Reise: Briefing → Abstimmungsrunde → „können wir noch eine Version machen?“ → Final_final_v7. Währenddessen ist der Trend weg. Unser Weg: kurze Briefings mit Beispiel-Hooks, Styleguide als Guardrail, Batch-Produktion mit festen Freigabefenstern. Wir testen Varianten klein, bevor wir groß perfektionieren. Entscheidungswege sind kurz (Creator ↔ Entscheider), Feedback ist konkret (Message, Hook, CTA). Ergebnis: Content im Takt des Feeds, ohne Qualität zu opfern – und ohne, dass man ein Museum für Zwischenversionen eröffnen müsste.</p>`,
+    "Community-Management": `<p>Manchmal klang Community früher wie ein Ticket-System: Nummer ziehen, bitte Geduld. Dabei entstehen Beziehungen nicht im Wartezimmer. Wir arbeiten mit Tonalitätsleitplanken, Antwortbibliotheken für Wiederkehrendes und Eskalationswegen, die wirklich kurz sind. Monitoring in Echtzeit, klare SLAs je Kanal, und: Wir erkennen Chancen – aus einer Frage wird ein Post, aus einem Kommentar ein UGC-Format. Community ist für uns kein „nachgelagert“, sondern Teil des Contents. So entsteht Nähe, die nicht nach Callcenter klingt, sondern nach Marke mit Puls.</p>`,
+    "Paid Social": `<p>Wir haben zu oft hübsche CPM-Kurven gesehen, die am Ende niemandem den Kassabon versüßt haben. Paid ist bei uns kein U-Boot, das wochenlang unsichtbar fährt. Wir arbeiten hypothesenbasiert: Creative x Zielgruppe x Offer – jede Woche eine klare Lernfrage. Tracking sitzt (UTMs, Events, saubere Pixel), Creatives testen wir strukturiert (Thumbstopper, Hook, Proof, CTA). Budget fließt dorthin, wo die Lernrate steigt; was nicht liefert, fliegt – ohne Drama. Ergebnis: weniger Eitelkeitszahlen, mehr Cost-per-Result, die man gern herzeigt.</p>`,
+    "Monitoring": `<p>Die Monatsreports früher: 30 Seiten, fünf Farben, null nächste Schritte. Schöne Chronik, wenig Richtung. Unser Monitoring ist ein Cockpit: ein North-Star, wenige Leit-KPIs, dahinter die Hebel. Wöchentlich schließen wir die Lernschleife: Was hat gewirkt? Warum? Was testen wir als Nächstes? Jede Zahl bekommt eine Aktion, jeder Chart eine Entscheidung. So wird Reporting vom Wetterbericht zur Wettervorhersage – mit Regenschirm, nicht nur mit „es könnte regnen“.</p>`
+  };
+
+  function normalizeKey(s){ return (s||'').toLowerCase().replace(/\s+/g,' ').trim(); }
+  const MAP = Object.fromEntries(Object.entries(SERVICES_COPY).map(([k,v])=>[normalizeKey(k), v]));
+
+  window.openModal = function(title){
+    const scrim   = document.getElementById('serviceModal');
+    const titleEl = scrim ? scrim.querySelector('.modal-title') : null;
+    const bodyEl  = scrim ? scrim.querySelector('.modal-body')  : null;
+    const closeBtn= scrim ? scrim.querySelector('.modal-close') : null;
+    if(!scrim || !titleEl || !bodyEl) return;
+
+    const key = normalizeKey(title);
+    titleEl.textContent = title || 'Leistung';
+    bodyEl.innerHTML = MAP[key] || '<p>Details folgen.</p>';
+
+    scrim.classList.add('active');
+    scrim.setAttribute('aria-hidden','false');
+    (closeBtn || scrim).focus?.();
+  };
+})();
+</script>
+
 </body>
 </html>
